@@ -82,6 +82,7 @@ const CreateConfigDetails = () => {
             setSpeed(data.speed !== undefined ? data.speed.toString() : "");
             setDirection(data.direction || "");
             setSelectedColor(data.selectedColor || data.color || 'red');
+            setPSDValues([data.lower_PSD, data.upper_PSD])
           }
         } catch (error) {
           console.error('Error fetching config data:', error);

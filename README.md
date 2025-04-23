@@ -154,3 +154,5 @@ Feel free to reach out for questions, feedback, or collaboration opportunities!
 npm install socket.io-client@4.5.1
 npm install react-native-chart-kit
 
+## Publishing to Expo Store
+npx eas update --branch preview

@@ -27,7 +27,7 @@ const PlayConfig = () => {
     if (!timestamp) return '';
     
     try {
-      const date = new Date(timestamp);
+        const date = new Date(timestamp * 1000);
         if (isNaN(date.getTime())) {
             return timestamp;
       }

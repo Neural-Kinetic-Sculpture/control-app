@@ -39,7 +39,7 @@ const StartButton = () => {
             });
 
             socket.on('connect_error', (error) => {
-                console.error('onnection error:', error);
+                console.error('Connection error:', error);
                 setConnectionStatus('Error');
             });
 
@@ -52,12 +52,13 @@ const StartButton = () => {
                 try {
                     const parsed = typeof data === 'string' ? JSON.parse(data) : data;
 
-                    const { wave_type, dominant_freq, psd, confidence, timestamp } = parsed;
+                    const { wave_type, dominant_freq, dominant_band, intensity, psd, timestamp } = parsed;
 
                     setEegData(parsed);
                     console.log(
                         `Wave: ${wave_type} | Freq: ${dominant_freq.toFixed(2)} Hz | ` +
-                        `PSD: ${psd.toFixed(2)} | Conf: ${confidence} | Time: ${timestamp}`
+                        `Dom_Band: ${dominant_band} | Intensity: ${intensity} | ` + 
+                        `PSD: ${psd.toFixed(2)} | Time: ${timestamp}` 
                     );
 
                 } catch (err) {
