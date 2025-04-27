@@ -13,9 +13,19 @@ const PlayConfig = () => {
   const { configId } = useLocalSearchParams();
   const eegData = useConfigStore((state) => state.eegData);
   const wave_type = eegData?.wave_type ?? '';
+  
+//   const alpha_band = eegData?.alpha_band ?? '';
+//   const beta_band = eegData?.beta_band ?? '';
+//   const theta_band = eegData?.theta_band ?? '';
+//   const delta_band = eegData?.delta_band ?? '';
+//   const gamma_band = eegData?.gamma_band ?? '';
+//   const dominant_band = eegData?.dominant_band ?? '';
+//   const alpha_beta_ratio = eegData?.alpha_beta_ratio ?? '';
+//   const alpha_delta_ratio = eegData?.alpha_delta_ratio ?? '';
+//   const peak_alpha_freq = eegData?.peak_alpha_freq ?? '';
+
   const dominant_freq = eegData?.dominant_freq ?? 0;
   const psd = eegData?.psd ?? 0;
-  const confidence = eegData?.confidence ?? 0;
   const timestamp = eegData?.timestamp ?? '';
   
   const [fetchError, setFetchError] = useState('');
@@ -55,7 +65,7 @@ const PlayConfig = () => {
         return updatedLogs.slice(0, 10); // Keep only latest 10
       });
     }
-  }, [wave_type, dominant_freq, psd, confidence, timestamp]);
+  }, [wave_type, dominant_freq, psd, timestamp]);
 
   useFocusEffect(
     useCallback(() => {

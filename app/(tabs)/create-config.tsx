@@ -10,7 +10,8 @@ import { supabase } from '@/lib/supabase';
 
 const CreateConfig = () => {
   const { configId } = useLocalSearchParams();
-  const { x, y, name, height, setX, setY, setName, setHeight, resetConfig } = useConfigStore();
+  // const { x, y, name, height, setX, setY, setName, setHeight, resetConfig } = useConfigStore();
+  const { x, y, name, setX, setY, setName, resetConfig } = useConfigStore();
   const params = useLocalSearchParams();
   const [isFormValid, setIsFormValid] = useState(false);
   const [fetchError, setFetchError] = useState('');
@@ -84,7 +85,7 @@ const CreateConfig = () => {
       if (data) {
         console.log("Config data loaded:", data);
         setName(data.config_name || '');
-        setHeight(data.starting_height ? data.starting_height.toString() : '');
+        //setHeight(data.starting_height ? data.starting_height.toString() : '');
         setX(data.panels_x ? data.panels_x.toString() : '');
         setY(data.panels_y ? data.panels_y.toString() : '');
       }
@@ -157,12 +158,13 @@ const CreateConfig = () => {
   useEffect(() => {
     const formIsValid = 
       name.trim() !== "" && 
-      height.trim() !== "" && 
+      //height.trim() !== "" && 
       x.trim() !== "" && 
       y.trim() !== "";
     
     setIsFormValid(formIsValid);
-  }, [name, height, x, y]);
+    //[name, height, x, y]
+  }, [name, x, y]);
 
 
   const updateConfigSettings = async (configId) => {
@@ -192,7 +194,7 @@ const CreateConfig = () => {
         const configData = {
           user_id: userId,
           config_name: name,
-          starting_height: height,
+          // starting_height: height,
           panels_x: x,
           panels_y: y,
           favorite: isEditMode ? undefined : false,
@@ -237,7 +239,7 @@ const CreateConfig = () => {
     } else {
       Alert.alert(
         "Missing Information",
-        "Please fill out all required fields (name, starting height, and number of panels) before saving your configuration.",
+        "Please fill out all of the fields before saving your configuration.",
         [{ text: "OK" }]
       );
     }
@@ -249,7 +251,7 @@ const CreateConfig = () => {
       // Restore temp values if not in edit mode
       if (!configId && params.tempName) {
         setName(params.tempName);
-        setHeight(params.tempHeight);
+        //setHeight(params.tempHeight);
         setX(params.tempX);
         setY(params.tempY);
       }
@@ -269,7 +271,7 @@ const CreateConfig = () => {
           pathname: '/(sub-pages)/create-config-details',
           params: {
             tempName: name,
-            tempHeight: height,
+            //tempHeight: height,
             tempX: x,
             tempY: y,
             isCreatingConfig: true
@@ -279,7 +281,7 @@ const CreateConfig = () => {
     } else {
       Alert.alert(
         "Missing Information",
-        "Please fill out all required fields (name, starting height, and number of panels) before adding a range.",
+        "Please fill out all of the fields before adding a range.",
         [{ text: "OK" }]
       );
     }
@@ -333,7 +335,7 @@ const CreateConfig = () => {
             />
           </View>
 
-          <Text className="mt-4 font-bold text-xl self-start ml-7 text-darkPurple">Enter a starting height:</Text>
+          {/* <Text className="mt-4 font-bold text-xl self-start ml-7 text-darkPurple">Enter a starting height:</Text>
           <View className="mt-4 bg-medYellow w-11/12 h-36 py-3 rounded-3xl justify-center items-center">
             <Text className="text-darkPurple px-8 pb-2 text-center font-medium">
               Enter, in meters, the distance from the ceiling you would like the sculpture to begin at:
@@ -344,7 +346,7 @@ const CreateConfig = () => {
               placeholder="Enter height here"
               keyboardType="numeric"
             />
-          </View>
+          </View> */}
 
           <Text className="mt-4 font-bold text-xl self-start ml-7 text-darkPurple">
             Enter number of panels:
