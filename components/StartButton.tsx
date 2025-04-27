@@ -54,23 +54,15 @@ const StartButton = () => {
                 try {
                     const parsed = typeof data === 'string' ? JSON.parse(data) : data;
 
-                    // const { alpha_band, beta_band, theta_band, delta_band, gamma_band, dominant_band, alpha_beta_ratio, alpha_delta_ratio, peak_alpha_freq, timestamp } = parsed;
-                    const { wave_type, dominant_freq, dominant_band, intensity, psd, timestamp } = parsed;
-
-                    // console.log(
-                    //     `Alpha: ${alpha_band.toFixed(2)} | Beta: ${beta_band.toFixed(2)} | Theta: ${theta_band.toFixed(2)}\n` +
-                    //     `Delta: ${delta_band.toFixed(2)} | Gamma: ${gamma_band.toFixed(2)} | Dominant: ${dominant_band}\n` +
-                    //     `Alpha/Beta Ratio: ${alpha_beta_ratio.toFixed(2)} | Alpha/Delta Ratio: ${alpha_delta_ratio.toFixed(2)}\n` +
-                    //     `Peak Alpha Freq: ${peak_alpha_freq.toFixed(2)} Hz | Time: ${timestamp}`
-                    // );                    
+                    const { alpha_band, beta_band, theta_band, delta_band, gamma_band, dominant_band, alpha_beta_ratio, alpha_delta_ratio, peak_alpha_freq, timestamp } = parsed;
+                    console.log(
+                        `Alpha: ${alpha_band.toFixed(2)} | Beta: ${beta_band.toFixed(2)} | Theta: ${theta_band.toFixed(2)}\n` +
+                        `Delta: ${delta_band.toFixed(2)} | Gamma: ${gamma_band.toFixed(2)} | Dominant: ${dominant_band}\n` +
+                        `Alpha/Beta Ratio: ${alpha_beta_ratio.toFixed(2)} | Alpha/Delta Ratio: ${alpha_delta_ratio.toFixed(2)}\n` +
+                        `Peak Alpha Freq: ${peak_alpha_freq.toFixed(2)} Hz | Time: ${timestamp}`
+                    );                    
 
                     setEegData(parsed);
-                    console.log(
-                        `Wave: ${wave_type} | Freq: ${dominant_freq.toFixed(2)} Hz | ` +
-                        `Dom_Band: ${dominant_band} | Intensity: ${intensity} | ` + 
-                        `PSD: ${psd.toFixed(2)} | Time: ${timestamp}` 
-                    );
-
                 } catch (err) {
                     console.error("Error parsing EEG data:", err);
                 }

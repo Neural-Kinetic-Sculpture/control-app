@@ -11,21 +11,16 @@ import { useConfigStore } from '../../store';
 
 const PlayConfig = () => {
   const { configId } = useLocalSearchParams();
-  const eegData = useConfigStore((state) => state.eegData);
-  const wave_type = eegData?.wave_type ?? '';
-  
-//   const alpha_band = eegData?.alpha_band ?? '';
-//   const beta_band = eegData?.beta_band ?? '';
-//   const theta_band = eegData?.theta_band ?? '';
-//   const delta_band = eegData?.delta_band ?? '';
-//   const gamma_band = eegData?.gamma_band ?? '';
-//   const dominant_band = eegData?.dominant_band ?? '';
-//   const alpha_beta_ratio = eegData?.alpha_beta_ratio ?? '';
-//   const alpha_delta_ratio = eegData?.alpha_delta_ratio ?? '';
-//   const peak_alpha_freq = eegData?.peak_alpha_freq ?? '';
-
-  const dominant_freq = eegData?.dominant_freq ?? 0;
-  const psd = eegData?.psd ?? 0;
+  const eegData = useConfigStore((state) => state.eegData);  
+  const alpha_band = eegData?.alpha_band ?? '';
+  const beta_band = eegData?.beta_band ?? '';
+  const theta_band = eegData?.theta_band ?? '';
+  const delta_band = eegData?.delta_band ?? '';
+  const gamma_band = eegData?.gamma_band ?? '';
+  const dominant_band = eegData?.dominant_band ?? '';
+  const alpha_beta_ratio = eegData?.alpha_beta_ratio ?? '';
+  const alpha_delta_ratio = eegData?.alpha_delta_ratio ?? '';
+  const peak_alpha_freq = eegData?.peak_alpha_freq ?? '';
   const timestamp = eegData?.timestamp ?? '';
   
   const [fetchError, setFetchError] = useState('');
@@ -57,15 +52,16 @@ const PlayConfig = () => {
   };
 
   useEffect(() => {
-    if (wave_type && timestamp) {
+    if (dominant_band && timestamp) {
       const formattedTime = formatTimestamp(timestamp);
-      const logEntry = `Wave: ${wave_type}, Freq: ${dominant_freq.toFixed(2)} Hz, PSD: ${psd.toFixed(2)}, Conf: ${confidence}, Time: ${formattedTime}`;
+      const logEntry = `Dominant band: ${dominant_band}, alpha: ${alpha_band.toFixed(2)}, beta: ${beta_band.toFixed(2)}, theta: ${theta_band.toFixed(2)}, 
+      delta: ${delta_band.toFixed(2)}, gamma: ${gamma_band.toFixed(2)}, peak alpha freq: ${peak_alpha_freq.toFixed(2)}, Time: ${formattedTime}`;
       setLogs((prevLogs) => {
         const updatedLogs = [logEntry, ...prevLogs];
-        return updatedLogs.slice(0, 10); // Keep only latest 10
+        return updatedLogs.slice(0, 20); // Keep only latest 20
       });
     }
-  }, [wave_type, dominant_freq, psd, timestamp]);
+  }, [alpha_band, beta_band, theta_band, delta_band, gamma_band, dominant_band, alpha_beta_ratio, alpha_delta_ratio, peak_alpha_freq, timestamp]);
 
   useFocusEffect(
     useCallback(() => {
@@ -117,12 +113,10 @@ const PlayConfig = () => {
   const activeConfigs = useMemo(() => {
     if (!data) return [];
     return data.filter(config =>
-      dominant_freq >= config.lower_range &&
-      dominant_freq <= config.upper_range &&
-      psd >= config.lower_PSD &&
-      psd <= config.upper_PSD
+      alpha_band >= config.lower_range &&
+      alpha_band <= config.upper_range
     );
-  }, [data, dominant_freq, psd]);
+  }, [data, alpha_band]);
 
   const handleBack = () => {
     router.back();
@@ -191,8 +185,6 @@ const PlayConfig = () => {
                     y={configData?.panels_y}
                     lower={config.lower_range}
                     upper={config.upper_range}
-                    lower_PSD={config.lower_PSD}
-                    upper_PSD={config.upper_PSD}
                   />
                 </View>
               ))}

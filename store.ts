@@ -1,10 +1,15 @@
 import { create } from 'zustand';
 
 interface EEGData {
-  wave_type: string;
-  dominant_freq: number;
-  psd: number;
-  confidence: number;
+  alpha_band: number;
+  beta_band: number;
+  theta_band: number;
+  delta_band: number;
+  gamma_band: number;
+  dominant_band: string;
+  alpha_beta_ratio: number;
+  alpha_delta_ratio: number;
+  peak_alpha_freq: number;
   timestamp: string;
 }
 
