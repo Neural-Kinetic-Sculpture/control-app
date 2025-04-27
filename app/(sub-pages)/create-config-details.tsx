@@ -23,7 +23,6 @@ const CreateConfigDetails = () => {
 
   const [selectedSignal, setSelectedSignal] = useState("Alpha (8 - 12 Hz)")
   const [rangeValues, setRangeValues] = useState([8, 12]); // Initial range values
-  const [PSDValues, setPSDValues] = useState([0, 100]);
   const screenWidth = Dimensions.get('window').width;
   const { x, y } = useConfigStore();
   const [selectedPanels, setSelectedPanels] = useState(new Set());
@@ -41,11 +40,11 @@ const CreateConfigDetails = () => {
   const [isLoading, setIsLoading] = useState(isEditing);
 
   const signalRanges = {
-    "Alpha (8 - 12 Hz)": [8, 12],
-    "Beta (12 - 30 Hz)": [12, 30],
-    "Gamma (30 - 50 Hz)": [30, 50],
-    "Theta (4 - 8 Hz)": [4, 8],
-    "Delta (<4 Hz)": [0, 4]
+    "Alpha (8 - 12 Hz)": [0, 100],
+    "Beta (12 - 30 Hz)": [0, 100],
+    "Gamma (30 - 50 Hz)": [0, 100],
+    "Theta (4 - 8 Hz)": [0, 100],
+    "Delta (<4 Hz)": [0, 100]
   };
 
   useEffect(() => {
@@ -82,7 +81,6 @@ const CreateConfigDetails = () => {
             setSpeed(data.speed !== undefined ? data.speed.toString() : "");
             setDirection(data.direction || "");
             setSelectedColor(data.selectedColor || data.color || 'red');
-            setPSDValues([data.lower_PSD, data.upper_PSD])
           }
         } catch (error) {
           console.error('Error fetching config data:', error);
@@ -192,8 +190,6 @@ const CreateConfigDetails = () => {
           speed: parseFloat(speed),
           direction: direction.toLowerCase(),
           color: selectedColor,
-          lower_PSD: PSDValues[0],
-          upper_PSD: PSDValues[1],
           config_id: configId || null // Make sure to pass the configId
         };
         
@@ -286,8 +282,11 @@ const CreateConfigDetails = () => {
               </View>
 
               <Text className="mt-4 font-bold text-xl self-start ml-7 text-darkPurple">Specify a range:</Text>
-              <View className="mt-4 bg-medYellow w-11/12 h-48 py-3 rounded-3xl items-center">
+              <View className="mt-4 bg-medYellow w-11/12 h-52 py-3 rounded-3xl items-center">
                 <Text className="text-darkPurple px-14 pb-2 text-center font-medium mt-4">
+                  Select a range (0 to 100) of the power band intensity.
+                </Text>
+                <Text className="text-darkPurple px-14 text-center font-bold">
                   {selectedSignal}
                 </Text>
 
@@ -326,51 +325,7 @@ const CreateConfigDetails = () => {
                     Selected range: 
                   </Text>
                   <Text className="text-darkPurple pb-2 text-center font-normal mt-4">
-                    {rangeValues[0]} [Hz] to {rangeValues[1]} [Hz]
-                  </Text>
-                </View>
-              </View>
-
-              <Text className="mt-4 font-bold text-xl self-start ml-7 text-darkPurple">
-                Specify a power spectral density range:
-              </Text>
-              <View className="mt-4 bg-medYellow w-11/12 py-3 rounded-3xl items-center">
-                <MultiSlider
-                    values={PSDValues}
-                    onValuesChange={(values) => setPSDValues(values)}
-                    min={0}
-                    max={100}
-                    step={1}
-                    allowOverlap={false}
-                    snapped
-                    containerStyle={{
-                      height: 40,
-                      marginTop: 10
-                    }}
-                    selectedStyle={{
-                      backgroundColor: '#47313E'
-                    }}
-                    unselectedStyle={{
-                      backgroundColor: '#E5E7EB' // light gray
-                    }}
-                    sliderLength={screenWidth * 0.75} // 75% of screen width
-                    markerStyle={{
-                      backgroundColor: '#47313E',
-                      height: 20,
-                      width: 20,
-                    }}
-                    trackStyle={{
-                      height: 6,
-                      borderRadius: 3,
-                    }}
-                  />
-
-                <View className="flex-row">
-                  <Text className="text-darkPurple px-2 pb-2 text-center font-normal mt-4">
-                    Selected range: 
-                  </Text>
-                  <Text className="text-darkPurple pb-2 text-center font-normal mt-4">
-                    {PSDValues[0]} [dBm/Hz] to {PSDValues[1]} [dBm/Hz]
+                    {rangeValues[0]} to {rangeValues[1]}
                   </Text>
                 </View>
               </View>
