@@ -357,7 +357,7 @@ const CreateConfig = () => {
 
           <View className={`mt-4 ${hasPanelLock ? 'bg-gray-200' : 'bg-medYellow'} w-11/12 h-56 py-3 rounded-3xl justify-center items-center`}>
             <Text className="text-darkPurple px-14 pb-2 text-center font-medium">
-              Enter the number of panels in the format X by Y, such as a 3x3 array. As of now, we only offer 3x1, 3x2, or 3x3 configurations.
+              Enter the number of panels in the format X by Y, such as a 3x3 array. As of now, we only offer configurations with up to 9 panels.
             </Text>
             <TextInput 
               value={x}

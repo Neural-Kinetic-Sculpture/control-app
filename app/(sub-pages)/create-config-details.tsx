@@ -130,8 +130,8 @@ const CreateConfigDetails = () => {
       setSpeedError("Speed is required");
     } else if (isNaN(numValue)) {
       setSpeedError("Please enter a valid number");
-    } else if (numValue < 0 || numValue > 1.5) {
-      setSpeedError("Speed must be between 0-1.5 m/s");
+    } else if (numValue < 0 || numValue > 5) {
+      setSpeedError("Speed must be between 0-5 m/s");
     } else {
       setSpeedError("");
     }
@@ -379,9 +379,9 @@ const CreateConfigDetails = () => {
                       className="bg-lightYellow px-4 py-2 rounded-lg flex-1"
                       value={speed}
                       onChangeText={handleSpeedChange}
-                      placeholder="Enter speed (0-1.5 m/s)"
-                      keyboardType="numeric"
-                    />
+                      placeholder="Enter speed (int from 0-5 m/s)"
+                      keyboardType="number-pad"
+                      />
                   </View>
                   {speedError ? (
                     <Text className="text-red-500 ml-20 mt-1">{speedError}</Text>
