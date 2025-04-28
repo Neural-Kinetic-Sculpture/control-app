@@ -397,33 +397,63 @@ const CreateConfig = () => {
             </View>
           </TouchableOpacity>
 
-          <Text className="mt-4 font-bold text-xl self-start ml-7 text-darkPurple">Current ranges:</Text>
+          <Text className="mt-4 font-extrabold text-xl self-start ml-7 text-darkPurple">Current ranges:</Text>
         
           {fetchError && (<Text className="text-red-500 mt-2">{fetchError}</Text>)}
           {data && data.length > 0 ? (
             <View className="w-full">
-              {data.map(config => (
-                <ConfigRange
-                  key={config.id}
-                  id={config.id}
-                  signal={config.selectedSignal || config.setting_name} 
-                  lower_range={config.rangeValues_0 !== undefined ? config.rangeValues_0 : config.lower_range}
-                  upper_range={config.rangeValues_1 !== undefined ? config.rangeValues_1 : config.upper_range}
-                  color={config.selectedColor || config.color}
-                  onDelete={() => {
-                    handleDeleteConfig(config.id);
-                  }}
-                  onPress={() => {
-                    router.push({
-                      pathname: "/(sub-pages)/create-config-details",
-                      params: { 
-                        configId: isEditMode ? configId : null,
-                        settingId: config.id 
-                      }
-                    });
-                  }}
-                />
+
+              {Object.entries(
+                [...data].sort((a, b) => {
+                  // Sort by signal name first
+                  const signalA = (a.selectedSignal || a.setting_name || '').match(/^[A-Za-z]+/)?.[0] || '';
+                  const signalB = (b.selectedSignal || b.setting_name || '').match(/^[A-Za-z]+/)?.[0] || '';
+
+                  if (signalA < signalB) return -1;
+                  if (signalA > signalB) return 1;
+
+                  // Then by lower range
+                  const lowerA = a.rangeValues_0 !== undefined ? a.rangeValues_0 : a.lower_range;
+                  const lowerB = b.rangeValues_0 !== undefined ? b.rangeValues_0 : b.lower_range;
+
+                  return lowerA - lowerB;
+                }).reduce((acc, config) => {
+                  // Group by signal type
+                  const signalName = (config.selectedSignal || config.setting_name || '').match(/^[A-Za-z]+/)?.[0] || 'Other';
+                  if (!acc[signalName]) {
+                    acc[signalName] = [];
+                  }
+                  acc[signalName].push(config);
+                  return acc;
+                }, {})
+              ).map(([signalName, configs]) => (
+                <View key={signalName}>
+                  <Text className="text-lg font-bold pt-2 px-8">{signalName} ranges</Text>
+                  {configs.map(config => (
+                    <ConfigRange
+                      key={config.id}
+                      id={config.id}
+                      signal={config.selectedSignal || config.setting_name}
+                      lower_range={config.rangeValues_0 !== undefined ? config.rangeValues_0 : config.lower_range}
+                      upper_range={config.rangeValues_1 !== undefined ? config.rangeValues_1 : config.upper_range}
+                      color={config.selectedColor || config.color}
+                      onDelete={() => {
+                        handleDeleteConfig(config.id);
+                      }}
+                      onPress={() => {
+                        router.push({
+                          pathname: "/(sub-pages)/create-config-details",
+                          params: { 
+                            configId: isEditMode ? configId : null,
+                            settingId: config.id
+                          }
+                        });
+                      }}
+                    />
+                  ))}
+                </View>
               ))}
+
             </View>
           ) : (
             <Text className="mt-2 text-gray-500 italic">No ranges found. Add a range to get started.</Text>

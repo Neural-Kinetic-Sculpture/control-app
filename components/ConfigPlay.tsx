@@ -17,7 +17,7 @@ type ConfigPlayProps = {
 
 const ConfigPlay = ({ name, lower, upper, color, isActive }: ConfigPlayProps) => {
   const waveType = name.match(/^[A-Za-z]+/)?.[0] || name;
-  const displayText = `${waveType} (${lower}-${upper}) Hz`;
+  const displayText = `${waveType} (${lower}-${upper})`;
 
   const animation = useSharedValue(0);
 

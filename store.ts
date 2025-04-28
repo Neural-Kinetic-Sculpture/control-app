@@ -10,6 +10,7 @@ interface EEGData {
   alpha_beta_ratio: number;
   alpha_delta_ratio: number;
   peak_alpha_freq: number;
+  psd: number;
   timestamp: string;
 }
 
@@ -19,12 +20,14 @@ interface ConfigState {
   x: string;
   y: string;
   eegData: EEGData | null;
+  isPlaying: boolean;
 
   setName: (name: string) => void;
   setHeight: (height: string) => void;
   setX: (x: string) => void;
   setY: (y: string) => void;
   setEegData: (data: EEGData) => void;
+  setIsPlaying: (isPlaying: boolean) => void;
   resetConfig: () => void;
 }
 
@@ -34,12 +37,14 @@ export const useConfigStore = create<ConfigState>((set) => ({
   x: '',
   y: '',
   eegData: null,
+  isPlaying: false,
 
   setName: (name) => set({ name }),
   setHeight: (height) => set({ height }),
   setX: (x) => set({ x }),
   setY: (y) => set({ y }),
   setEegData: (data) => set({ eegData: data }),
+  setIsPlaying: (isPlaying) => set({ isPlaying }),
 
   resetConfig: () =>
     set({
@@ -48,5 +53,6 @@ export const useConfigStore = create<ConfigState>((set) => ({
       x: '',
       y: '',
       eegData: null,
+      isPlaying: false,
     }),
 }));
