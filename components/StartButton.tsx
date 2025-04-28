@@ -43,17 +43,10 @@ const StartButton = ({ activeConfigs = [] }) => {
                 if (typeof panels === 'string') {
                     panels = JSON.parse(panels);
                 }
-                
-                // Ensure panels is an array
-                if (!Array.isArray(panels)) {
-                    console.error('Selected panels not in expected format:', panels);
-                    return;
-                }
-                
                 // For each selected panel, create a command
                 panels.forEach(panel => {
-                    const row = panel.row || 0;
-                    const col = panel.col || 0;
+                    const row = panel[0] || 0;
+                    const col = panel[2] || 0;
                     const speed = config.speed || 1;
                     const direction = config.direction === 'up' ? 1 : 0;
                     const brightness = config.brightness || 100;
@@ -80,11 +73,11 @@ const StartButton = ({ activeConfigs = [] }) => {
         // Compare with last commands to avoid duplicate sending
         const commandsString = JSON.stringify(commands);
         if (commandsString !== JSON.stringify(lastCommandsRef.current)) {
-            console.log(`Sending ${commands.length} control commands`);
+            //console.log(`Sending ${commands.length} control commands`);
             
             // Send each command once
             commands.forEach(command => {
-                console.log('Sending control command:', command);
+                //console.log('Sending control command:', command);
                 socketRef.current.emit('control_command', command);
             });
             
@@ -125,7 +118,7 @@ const StartButton = ({ activeConfigs = [] }) => {
             });
 
             socket.on('control_command', (command) => {
-                console.log('Received control command from server:', command);
+                //console.log('Received control command from server:', command);
             });
             
             socket.on('eeg_data', (data) => {
