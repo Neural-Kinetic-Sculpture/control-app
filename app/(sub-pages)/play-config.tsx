@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Image, Switch } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import Header from '@/components/Header';
 import { icons } from '@/constants';
@@ -49,6 +49,7 @@ const PlayConfig = () => {
   const [audioSettings, setAudioSettings] = useState(null);
   const [soundObjects, setSoundObjects] = useState({});
   const [playingStatus, setPlayingStatus] = useState({});
+  const [audioEnabled, setAudioEnabled] = useState(false);
 
   // Track the last played time for each sound to ensure 1.5s between plays
   const lastPlayedTime = useRef({});
@@ -106,6 +107,9 @@ const PlayConfig = () => {
   // Function to play a sound with overlap capability
   const playSound = async (soundId) => {
     // Skip if sound isn't loaded yet
+    if (!audioEnabled || !soundObjects[soundId] || !Array.isArray(soundObjects[soundId])) {
+        return;
+    }
     if (!soundObjects[soundId] || !Array.isArray(soundObjects[soundId])) {
       console.log("Sound not loaded yet:", soundId);
       return;
@@ -353,6 +357,21 @@ const PlayConfig = () => {
             header={"Enjoy the performance!"}
           />
 
+          {/* Add audio toggle switch */}
+          <View className="flex-row items-center justify-center w-full my-2">
+            <Text className="mr-2 text-darkPurple font-medium">Audio:</Text>
+            <Switch
+              trackColor={{ false: "#767577", true: "#c29bd0" }}
+              thumbColor={audioEnabled ? "#47313E" : "#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={setAudioEnabled}
+              value={audioEnabled}
+            />
+            <Text className="ml-2 text-darkPurple font-medium">
+              {audioEnabled ? "On" : "Off"}
+            </Text>
+          </View>
+          
           <StartButton activeConfigs={activeConfigs} />
 
           {fetchError && (<Text className="text-red-500 mt-2">{fetchError}</Text>)}
