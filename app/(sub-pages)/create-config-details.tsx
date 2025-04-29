@@ -1,3 +1,4 @@
+
 import { View, Text, Image, SafeAreaView, ScrollView, Dimensions, Modal, TouchableOpacity, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Header from '@/components/Header';
@@ -14,7 +15,7 @@ const CreateConfigDetails = () => {
   const params = useLocalSearchParams();
   const configId = params.configId;
   const settingId = params.settingId;
-  const isEditing = !!settingId; 
+  const isEditing = !!settingId;
 
   const tempName = params.tempName;
   const tempHeight = params.tempHeight;
@@ -38,6 +39,7 @@ const CreateConfigDetails = () => {
   const [showModal, setShowModal] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isLoading, setIsLoading] = useState(isEditing);
+  const [hasAudio, setHasAudio] = useState(false);
 
   const signalRanges = {
     "Alpha (8 - 12 Hz)": [0, 100],
@@ -96,6 +98,7 @@ const CreateConfigDetails = () => {
     }
   }, [settingId, isEditing]);
 
+
   const onSelectColor = ({ hex }) => {
     setSelectedColor(hex) 
     console.log(hex)
@@ -130,8 +133,8 @@ const CreateConfigDetails = () => {
       setSpeedError("Speed is required");
     } else if (isNaN(numValue)) {
       setSpeedError("Please enter a valid number");
-    } else if (numValue < 0 || numValue > 5) {
-      setSpeedError("Speed must be between 0-5 m/s");
+    } else if (numValue < 0 || numValue > 1.5) {
+      setSpeedError("Speed must be between 0-1.5 m/s");
     } else {
       setSpeedError("");
     }
@@ -151,14 +154,14 @@ const CreateConfigDetails = () => {
   };
 
   useEffect(() => {
-    const formIsValid = 
-      brightness.trim() !== "" && 
-      speed.trim() !== "" && 
+    const formIsValid =
+      brightness.trim() !== "" &&
+      speed.trim() !== "" &&
       direction.trim() !== "" &&
       !brightnessError &&
       !speedError &&
       !directionError;
-    
+
     setIsFormValid(formIsValid);
   }, [brightness, speed, direction, brightnessError, speedError, directionError]);
 
@@ -233,16 +236,17 @@ const CreateConfigDetails = () => {
     }
   };
 
+
   const handleBack = () => {
     router.back();
   };
 
   return (
-    <SafeAreaView className="bg-white h-full">  
+    <SafeAreaView className="bg-white h-full">
       <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}>
         <View className="items-center w-full justify-center">
           <View className="w-full px-4 mt-2">
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={handleBack}
               className="flex-row items-center bg-lightPurple px-2 py-1 w-20 rounded-xl"
             >
@@ -256,7 +260,7 @@ const CreateConfigDetails = () => {
             </TouchableOpacity>
           </View>
 
-          <Header 
+          <Header
             title={isEditing ? "Edit configuration" : "Create a new configuration"}
             header={isEditing ? "Edit your configuration below" : "Add and edit new ranges below"}
           />
@@ -269,10 +273,10 @@ const CreateConfigDetails = () => {
             <>
               <Text className="mt-4 font-bold text-xl self-start ml-7 text-darkPurple">Choose a signal:</Text>
               <View className="mt-4 bg-medYellow w-11/12 py-3 rounded-3xl flex-wrap flex-row justify-center items-center">
-                {["Alpha (8 - 12 Hz)", "Beta (12 - 30 Hz)", "Gamma (30 - 50 Hz)", 
+                {["Alpha (8 - 12 Hz)", "Beta (12 - 30 Hz)", "Gamma (30 - 50 Hz)",
                   "Theta (4 - 8 Hz)", "Delta (<4 Hz)"].map((signal, index) => (
                   <View key={signal} className={`w-1/2 mt-5 ${index === 4 ? "w-full flex items-center" : "justify-center items-center"}`}>
-                    <SignalButton 
+                    <SignalButton
                       title={signal}
                       isSelected={selectedSignal === signal}
                       onPress={() => setSelectedSignal(signal)}
@@ -322,7 +326,7 @@ const CreateConfigDetails = () => {
 
                 <View className="flex-row">
                   <Text className="text-darkPurple px-2 pb-2 text-center font-normal mt-4">
-                    Selected range: 
+                    Selected range:
                   </Text>
                   <Text className="text-darkPurple pb-2 text-center font-normal mt-4">
                     {rangeValues[0]} to {rangeValues[1]}
@@ -359,7 +363,7 @@ const CreateConfigDetails = () => {
                 <View className="w-full mb-4">
                   <View className="flex-row items-center space-x-4 w-full">
                     <Text className="text-darkPurple font-medium">Brightness:   </Text>
-                    <TextInput 
+                    <TextInput
                       className="bg-lightYellow px-4 py-2 rounded-lg flex-1"
                       value={brightness}
                       onChangeText={handleBrightnessChange}
@@ -375,13 +379,13 @@ const CreateConfigDetails = () => {
                 <View className="w-full mb-4">
                   <View className="flex-row items-center space-x-4 w-full">
                     <Text className="text-darkPurple font-medium">Speed:   </Text>
-                    <TextInput 
+                    <TextInput
                       className="bg-lightYellow px-4 py-2 rounded-lg flex-1"
                       value={speed}
                       onChangeText={handleSpeedChange}
-                      placeholder="Enter speed (int from 0-5 m/s)"
-                      keyboardType="number-pad"
-                      />
+                      placeholder="Enter speed (0-1.5 m/s)"
+                      keyboardType="numeric"
+                    />
                   </View>
                   {speedError ? (
                     <Text className="text-red-500 ml-20 mt-1">{speedError}</Text>
@@ -391,7 +395,7 @@ const CreateConfigDetails = () => {
                 <View className="w-full mb-4">
                   <View className="flex-row items-center space-x-4 w-full">
                     <Text className="text-darkPurple font-medium">Direction:   </Text>
-                    <TextInput 
+                    <TextInput
                       className="bg-lightYellow px-4 py-2 rounded-lg flex-1"
                       value={direction}
                       onChangeText={handleDirectionChange}
@@ -406,22 +410,22 @@ const CreateConfigDetails = () => {
                 <View className="flex-row items-center space-x-4 w-full mb-4">
                   <Text className="text-darkPurple font-medium">Color:   </Text>
                   <View className="justify-center flex-1">
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       onPress={() => setShowModal(true)}
                       className="bg-lightPurple px-3 py-3 rounded-lg"
                     >
                       <Text className="text-white font-medium text-center">Choose your color</Text>
                     </TouchableOpacity>
 
-                    <Modal 
-                      visible={showModal} 
+                    <Modal
+                      visible={showModal}
                       animationType='slide'
                       transparent={true}
                     >
                       <View className="flex-1 justify-center items-center bg-black/50">
                         <View className="bg-white p-6 rounded-xl w-11/12">
-                          <ColorPicker 
-                            style={{ width: '100%' }} 
+                          <ColorPicker
+                            style={{ width: '100%' }}
                             value={selectedColor}
                             onComplete={onSelectColor}
                           >
@@ -432,7 +436,7 @@ const CreateConfigDetails = () => {
                             <Swatches />
                           </ColorPicker>
 
-                          <TouchableOpacity 
+                          <TouchableOpacity
                             onPress={() => setShowModal(false)}
                             className="bg-lightPurple mt-4 px-6 py-3 rounded-lg"
                           >
@@ -450,7 +454,7 @@ const CreateConfigDetails = () => {
                 </View>
               </View>
 
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={handlePress}
                 activeOpacity={isFormValid ? 0.7 : 1}
                 className={`mt-5 h-10 w-[340px] rounded-xl ${isFormValid ? 'bg-darkPurple' : 'bg-gray-400'} justify-center items-center`}>
@@ -467,6 +471,7 @@ const CreateConfigDetails = () => {
                   />
                 </View>
               </TouchableOpacity>
+
             </>
           )}
         </View>
